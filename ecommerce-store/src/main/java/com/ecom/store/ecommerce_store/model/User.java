@@ -3,6 +3,7 @@ package com.ecom.store.ecommerce_store.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,10 +17,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String firstName;
     private String lastName;
+    @Column(nullable = false)
     private String email;
     private String image;
+    @Column(nullable = false)
     private String password;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
