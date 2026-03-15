@@ -20,7 +20,7 @@ public class User {
     private String lastName;
     private String email;
     private String image;
-    private String encryptedPassword;
+    private String password;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -30,14 +30,14 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String email, String image, String encryptedPassword,
+    public User(Long id, String firstName, String lastName, String email, String image, String password,
             LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.image = image;
-        this.encryptedPassword = encryptedPassword;
+        this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -62,8 +62,8 @@ public class User {
         return image;
     }
 
-    public String getEncryptedPassword() {
-        return encryptedPassword;
+    public String getPassword() {
+        return password;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -94,8 +94,8 @@ public class User {
         this.image = image;
     }
 
-    public void setEncryptedPassword(String encryptedPassword) {
-        this.encryptedPassword = encryptedPassword;
+    public void setPassword(String encryptedPassword) {
+        this.password = encryptedPassword;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
@@ -113,7 +113,7 @@ public class User {
     @Override
     public String toString() {
         return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-                + ", image=" + image + ", encryptedPassword=" + encryptedPassword + ", createdAt=" + createdAt
+                + ", image=" + image + ", encryptedPassword=" + password + ", createdAt=" + createdAt
                 + ", updatedAt=" + updatedAt + "]";
     }
 }
