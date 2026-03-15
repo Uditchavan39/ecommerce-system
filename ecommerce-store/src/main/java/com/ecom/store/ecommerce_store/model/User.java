@@ -116,6 +116,10 @@ public class User {
         this.roles = roles;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
     @Override
     public String toString() {
         return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
