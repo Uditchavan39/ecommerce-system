@@ -1,10 +1,21 @@
 package com.ecom.store.ecommerce_store.dto;
 
+import java.util.List;
+
 public class UserRegistrationDto {
     private String firstName;
     private String lastName;
     private String email;
     private String password;
+    private List<String> roles;
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
 
     public String getFirstName() {
         return firstName;

@@ -34,9 +34,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             try {
                 Claims claims = jwtUtil.extractClaims(token);
                 String email = claims.getSubject();
-                List<String> roles = claims.get("Roles", List.class);
+                List<String> roles = claims.get("roles", List.class);
                 List<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(role -> new SimpleGrantedAuthority("Role_" + role))
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                         .toList();
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email,
                         null, authorities);
