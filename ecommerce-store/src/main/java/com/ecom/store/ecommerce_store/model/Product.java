@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
@@ -18,8 +19,8 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    @Column(nullable = false)
-    private Long sellerId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private User seller;
     @Column(nullable = false)
     private String name;
     private String description;
@@ -45,12 +46,12 @@ public class Product {
         this.id = id;
     }
 
-    public Long getSellerId() {
-        return sellerId;
+    public User getSeller() {
+        return seller;
     }
 
-    public void setSellerId(Long sellerId) {
-        this.sellerId = sellerId;
+    public void setSeller(User seller) {
+        this.seller = seller;
     }
 
     public String getName() {
