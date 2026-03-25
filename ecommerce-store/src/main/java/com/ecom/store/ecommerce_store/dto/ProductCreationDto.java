@@ -1,20 +1,19 @@
 package com.ecom.store.ecommerce_store.dto;
 
-import java.net.URL;
 import java.util.List;
 
-public class ProductDto {
+public class ProductCreationDto {
     private String name;
     private String description;
     private Double price;
     private String category;
-    private List<URL> images;
+    private List<String> images;
 
-    public List<URL> getImages() {
+    public List<String> getImages() {
         return images;
     }
 
-    public void setImages(List<URL> images) {
+    public void setImages(List<String> images) {
         this.images = images;
     }
 

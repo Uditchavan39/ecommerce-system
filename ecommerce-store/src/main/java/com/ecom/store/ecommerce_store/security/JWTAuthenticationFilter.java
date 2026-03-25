@@ -3,7 +3,6 @@ package com.ecom.store.ecommerce_store.security;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.task.TaskExecutionProperties.Simple;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
