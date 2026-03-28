@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.ecom.store.ecommerce_store.model.Product;
 import com.ecom.store.ecommerce_store.repository.ProductRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ProductService {
     private ProductRepository productRepository;
@@ -29,6 +31,7 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional
     public Product updateProduct(Long id, Product product) {
         Product existingProduct = productRepository.findById(id).orElse(null);
         if (existingProduct != null) {
