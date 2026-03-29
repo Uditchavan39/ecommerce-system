@@ -18,17 +18,21 @@ import com.ecom.store.ecommerce_store.model.Cart;
 import com.ecom.store.ecommerce_store.model.CartItem;
 import com.ecom.store.ecommerce_store.model.User;
 import com.ecom.store.ecommerce_store.service.CartService;
+import com.ecom.store.ecommerce_store.service.OrderService;
 import com.ecom.store.ecommerce_store.service.UserService;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/api/cart")
 @RestController
 public class CartController {
     private CartService cartService;
     private UserService userService;
+    private OrderService orderService;
 
-    public CartController(CartService cartService, UserService userService) {
+    public CartController(CartService cartService, UserService userService, OrderService orderService) {
         this.cartService = cartService;
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/")
@@ -73,6 +77,20 @@ public class CartController {
             return ResponseEntity.internalServerError().body("deletion Failed");
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Cart Item Successfully Deleted.");
+    }
+
+    @PostMapping("/checkout")
+    public ResponseEntity<?> checkOutCart() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByEmail(userEmail);
+        if (user == null)
+            return ResponseEntity.status(404).body("Please Login Or Register First");
+        try {
+            orderService.checkoutCart(user.getId());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Failed To Checkout Cart");
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body("Your Order Has Been SuccessFully Placed.");
     }
 
 }

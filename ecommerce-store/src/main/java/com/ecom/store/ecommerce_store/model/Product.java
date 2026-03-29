@@ -11,15 +11,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "products")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User seller;
     @Column(nullable = false)
     private String name;
@@ -29,6 +31,12 @@ public class Product {
     private String category;
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<OrderItem> items;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private Integer quantity;
 
     public List<ProductImage> getImages() {
         return images;
@@ -86,14 +94,6 @@ public class Product {
         this.category = category;
     }
 
-    public Long getInventoryId() {
-        return inventoryId;
-    }
-
-    public void setInventoryId(Long inventoryId) {
-        this.inventoryId = inventoryId;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -110,7 +110,12 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-    private Long inventoryId;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
 }

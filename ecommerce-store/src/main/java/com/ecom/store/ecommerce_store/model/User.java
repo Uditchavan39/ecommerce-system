@@ -3,12 +3,15 @@ package com.ecom.store.ecommerce_store.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.ManyToAny;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -31,8 +34,10 @@ public class User {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Role> roles;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
     public User() {
     }

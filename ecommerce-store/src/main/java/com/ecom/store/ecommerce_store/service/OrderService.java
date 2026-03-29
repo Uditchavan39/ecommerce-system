@@ -10,9 +10,11 @@ import com.ecom.store.ecommerce_store.model.Cart;
 import com.ecom.store.ecommerce_store.model.CartItem;
 import com.ecom.store.ecommerce_store.model.Order;
 import com.ecom.store.ecommerce_store.model.OrderItem;
+import com.ecom.store.ecommerce_store.model.Product;
 import com.ecom.store.ecommerce_store.model.User;
 import com.ecom.store.ecommerce_store.repository.CartRepository;
 import com.ecom.store.ecommerce_store.repository.OrderRepository;
+import com.ecom.store.ecommerce_store.repository.ProductRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -23,13 +25,15 @@ public class OrderService {
     private OrderRepository orderRepository;
     private CartService cartService;
     private UserService userService;
+    private ProductRepository productRepository;
 
     public OrderService(OrderRepository orderRepository, CartService cartService, UserService userService,
-            CartRepository cartRepository) {
+            CartRepository cartRepository, ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
         this.userService = userService;
         this.cartRepository = cartRepository;
+        this.productRepository = productRepository;
     }
 
     public List<Order> getOrders(Long userId) {
@@ -48,10 +52,17 @@ public class OrderService {
         Order order = new Order();
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : items) {
+            Product product = productRepository.findByIdForUpdate(cartItem.getProduct().getId()); // avoids race
+                                                                                                  // condition
+            if (product == null || product.getQuantity() < cartItem.getQuantity() || product.getQuantity() <= 0
+                    || cartItem.getQuantity() <= 0) {
+                throw new RuntimeException("Product" + product.getName() + " is Out Of Stock");
+            }
+            product.setQuantity(product.getQuantity() - cartItem.getQuantity());
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
-            orderItem.setProduct(cartItem.getProduct());
-            orderItem.setPurchasePrice(cartItem.getProduct().getPrice());
+            orderItem.setProduct(product);
+            orderItem.setPurchasePrice(product.getPrice());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItems.add(orderItem);
         }
