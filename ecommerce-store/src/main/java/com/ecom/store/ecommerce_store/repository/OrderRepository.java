@@ -1,13 +1,15 @@
 package com.ecom.store.ecommerce_store.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.ecom.store.ecommerce_store.model.Order;
 import com.ecom.store.ecommerce_store.model.User;
-import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    List<User> findByEmail(String email);
+    List<Order> findByUser(User user);
 }
