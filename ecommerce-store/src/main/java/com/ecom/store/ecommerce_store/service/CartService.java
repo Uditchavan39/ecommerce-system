@@ -73,16 +73,4 @@ public class CartService {
         }
     }
 
-    public Cart checkoutCart(Long userId) {
-        Cart cart = cartRepository.findByUserId(userId);
-        if (cart != null) {
-            // TODO: Implement order creation logic here
-            // Here you would typically create an order from the cart items
-            // and then clear the cart. For simplicity, we'll just clear the cart.
-            cart.getItems().clear();
-            return cartRepository.save(cart);
-        }
-        return null;
-    }
-
 }
