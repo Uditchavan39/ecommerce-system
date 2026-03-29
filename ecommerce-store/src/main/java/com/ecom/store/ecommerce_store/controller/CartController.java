@@ -20,7 +20,6 @@ import com.ecom.store.ecommerce_store.model.User;
 import com.ecom.store.ecommerce_store.service.CartService;
 import com.ecom.store.ecommerce_store.service.OrderService;
 import com.ecom.store.ecommerce_store.service.UserService;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RequestMapping("/api/cart")
 @RestController

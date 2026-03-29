@@ -14,7 +14,7 @@ public class ProductImage {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     private String imageUrl;
 
