@@ -43,8 +43,6 @@ public class Product {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    @Column(nullable = false)
-    private Integer quantity;
 
     public List<ProductImage> getImages() {
         return images;
@@ -116,14 +114,6 @@ public class Product {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
     }
 
 }

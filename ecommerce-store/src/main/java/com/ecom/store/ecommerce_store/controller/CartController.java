@@ -18,6 +18,7 @@ import com.ecom.store.ecommerce_store.model.Cart;
 import com.ecom.store.ecommerce_store.model.CartItem;
 import com.ecom.store.ecommerce_store.model.User;
 import com.ecom.store.ecommerce_store.service.CartService;
+import com.ecom.store.ecommerce_store.service.InventoryService;
 import com.ecom.store.ecommerce_store.service.OrderService;
 import com.ecom.store.ecommerce_store.service.UserService;
 
@@ -27,11 +28,14 @@ public class CartController {
     private CartService cartService;
     private UserService userService;
     private OrderService orderService;
+    private InventoryService inventoryService;
 
-    public CartController(CartService cartService, UserService userService, OrderService orderService) {
+    public CartController(CartService cartService, UserService userService, OrderService orderService,
+            InventoryService inventoryService) {
         this.cartService = cartService;
         this.userService = userService;
         this.orderService = orderService;
+        this.inventoryService = inventoryService;
     }
 
     @GetMapping("/")
@@ -42,7 +46,10 @@ public class CartController {
             return ResponseEntity.status(404).build();
         }
         Cart cart = cartService.getCartByUserId(user.getId());
-        return ResponseEntity.ok(new CartResponse(cart));
+        return ResponseEntity.ok(new CartResponse(cart.getItems().stream()
+                .map(item -> new CartItemResponse(item,
+                        inventoryService.getAvailableQuantity(item.getProduct().getId())))
+                .toList()));
     }
 
     // handles both create and update.
@@ -61,7 +68,8 @@ public class CartController {
         if (cartItem == null) {
             return ResponseEntity.badRequest().body("Failed to Add Product to Cart");
         }
-        return ResponseEntity.ok(new CartItemResponse(cartItem));
+        return ResponseEntity.ok(new CartItemResponse(cartItem,
+                inventoryService.getAvailableQuantity(cartItem.getProduct().getId())));
     }
 
     @DeleteMapping("/{id}")

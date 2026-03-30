@@ -7,17 +7,21 @@ public class CartItemResponse {
     private ProductResponse product;
     private Long id;
 
-    public CartItemResponse(CartItem cartItem) {
+    public CartItemResponse(CartItem cartItem, Integer availableQuantity) {
         this.product = new ProductResponse.Builder(cartItem.getProduct().getId(),
                 cartItem.getProduct().getName(),
                 cartItem.getProduct().getPrice(),
-                cartItem.getProduct().getSeller().getEmail(), cartItem.getProduct().getQuantity())
+                cartItem.getProduct().getSeller().getEmail(), availableQuantity)
                 .setDescription(cartItem.getProduct().getDescription())
                 .setCategory(cartItem.getProduct().getCategory())
                 .setImages(cartItem.getProduct().getImages().stream().map(image -> image.getImageUrl()).toList())
                 .build();
         this.setQuantity(cartItem.getQuantity());
         this.setId(cartItem.getId());
+    }
+
+    public CartItemResponse(CartItem cartItem) {
+        this(cartItem, null);
     }
 
     public Integer getQuantity() {

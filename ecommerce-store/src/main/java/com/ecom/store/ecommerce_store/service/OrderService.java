@@ -1,5 +1,6 @@
 package com.ecom.store.ecommerce_store.service;
 
+import com.ecom.store.ecommerce_store.controller.AuthController;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,8 @@ import jakarta.transaction.Transactional;
 @Service
 public class OrderService {
 
+    private final AuthController authController;
+    private final InventoryService inventoryService;
     private CartRepository cartRepository;
     private OrderRepository orderRepository;
     private CartService cartService;
@@ -28,12 +31,15 @@ public class OrderService {
     private ProductRepository productRepository;
 
     public OrderService(OrderRepository orderRepository, CartService cartService, UserService userService,
-            CartRepository cartRepository, ProductRepository productRepository) {
+            CartRepository cartRepository, ProductRepository productRepository, InventoryService inventoryService,
+            AuthController authController) {
         this.orderRepository = orderRepository;
         this.cartService = cartService;
         this.userService = userService;
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
+        this.inventoryService = inventoryService;
+        this.authController = authController;
     }
 
     public List<Order> getOrders(Long userId) {
@@ -52,13 +58,8 @@ public class OrderService {
         Order order = new Order();
         List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : items) {
-            Product product = productRepository.findByIdForUpdate(cartItem.getProduct().getId()); // avoids race
-                                                                                                  // condition
-            if (product == null || product.getQuantity() < cartItem.getQuantity() || product.getQuantity() <= 0
-                    || cartItem.getQuantity() <= 0) {
-                throw new RuntimeException("Product" + product.getName() + " is Out Of Stock");
-            }
-            product.setQuantity(product.getQuantity() - cartItem.getQuantity());
+            inventoryService.reserve(cartItem.getProduct().getId(), cartItem.getQuantity());
+            Product product = productRepository.findById(cartItem.getProduct().getId()).orElseThrow();
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(product);
