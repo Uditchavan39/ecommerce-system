@@ -43,6 +43,7 @@ public class Product {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @Column(nullable = false)
     private Integer quantity;
 
     public List<ProductImage> getImages() {

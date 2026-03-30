@@ -14,6 +14,7 @@ public class ProductResponse extends ProductCreationDto {
         this.setSellerEmail(builder.sellerEmail);
         this.setImages(builder.images);
         this.setId(builder.id);
+        this.setQuantity(builder.quantity);
     }
 
     public String getSellerEmail() {
@@ -38,14 +39,16 @@ public class ProductResponse extends ProductCreationDto {
         Double price;
         String category;
         String sellerEmail;
+        Integer quantity;
         List<String> images;
         Long id;
 
-        public Builder(Long id, String name, Double price, String sellerEmail) {
+        public Builder(Long id, String name, Double price, String sellerEmail, Integer quantity) {
             this.name = name;
             this.price = price;
             this.sellerEmail = sellerEmail;
             this.id = id;
+            this.quantity = quantity;
         }
 
         public Builder setDescription(String description) {

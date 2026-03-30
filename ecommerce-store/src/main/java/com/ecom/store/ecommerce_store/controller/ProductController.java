@@ -26,7 +26,7 @@ import com.ecom.store.ecommerce_store.service.ProductService;
 import com.ecom.store.ecommerce_store.service.UserService;
 
 @RestController
-@RequestMapping("api/products")
+@RequestMapping("/api/products")
 public class ProductController {
     private ProductService productService;
     private UserService userService;
@@ -44,7 +44,7 @@ public class ProductController {
             List<ProductResponse> productResponses = products.stream().map(product -> {
                 ProductResponse response = new ProductResponse.Builder(product.getId(), product.getName(),
                         product.getPrice(),
-                        product.getSeller().getEmail())
+                        product.getSeller().getEmail(), product.getQuantity())
                         .setDescription(product.getDescription())
                         .setCategory(product.getCategory())
                         .setImages(product.getImages().stream().map(ProductImage::getImageUrl).toList()).build();
@@ -58,14 +58,16 @@ public class ProductController {
     @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> createProduct(@RequestBody ProductCreationDto product) {
-        if (product.getName() == null || product.getPrice() == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product name and price are required");
+        if (product.getName() == null || product.getPrice() == null || product.getQuantity() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Product name,price and Inventory quantity are required");
         }
         Product newProduct = new Product();
         newProduct.setName(product.getName());
         newProduct.setDescription(product.getDescription());
         newProduct.setPrice(product.getPrice());
         newProduct.setCategory(product.getCategory());
+        newProduct.setQuantity(product.getQuantity());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.findByEmail(email);
@@ -104,6 +106,7 @@ public class ProductController {
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setCategory(product.getCategory());
+        existingProduct.setQuantity(product.getQuantity());
         existingProduct.setUpdatedAt(LocalDateTime.now());
         if (product.getImages() != null) {
             List<ProductImage> images = product.getImages().stream().map(url -> {
@@ -116,7 +119,7 @@ public class ProductController {
         }
         productService.updateProduct(id, existingProduct);
         ProductResponse response = new ProductResponse.Builder(existingProduct.getId(), existingProduct.getName(),
-                existingProduct.getPrice(), existingProduct.getSeller().getEmail())
+                existingProduct.getPrice(), existingProduct.getSeller().getEmail(), existingProduct.getQuantity())
                 .setDescription(existingProduct.getDescription())
                 .setCategory(existingProduct.getCategory())
                 .setImages(existingProduct.getImages().stream().map(ProductImage::getImageUrl).toList()).build();

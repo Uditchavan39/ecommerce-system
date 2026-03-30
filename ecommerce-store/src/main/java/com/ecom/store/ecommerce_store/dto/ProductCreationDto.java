@@ -7,6 +7,8 @@ public class ProductCreationDto {
     private String description;
     private Double price;
     private String category;
+    private Integer quantity;
+
     private List<String> images;
 
     public List<String> getImages() {
@@ -47,5 +49,13 @@ public class ProductCreationDto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

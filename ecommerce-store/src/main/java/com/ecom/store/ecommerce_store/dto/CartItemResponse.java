@@ -11,7 +11,7 @@ public class CartItemResponse {
         this.product = new ProductResponse.Builder(cartItem.getProduct().getId(),
                 cartItem.getProduct().getName(),
                 cartItem.getProduct().getPrice(),
-                cartItem.getProduct().getSeller().getEmail())
+                cartItem.getProduct().getSeller().getEmail(), cartItem.getProduct().getQuantity())
                 .setDescription(cartItem.getProduct().getDescription())
                 .setCategory(cartItem.getProduct().getCategory())
                 .setImages(cartItem.getProduct().getImages().stream().map(image -> image.getImageUrl()).toList())
