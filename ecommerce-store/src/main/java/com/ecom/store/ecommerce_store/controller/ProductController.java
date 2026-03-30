@@ -22,6 +22,7 @@ import com.ecom.store.ecommerce_store.dto.ProductResponse;
 import com.ecom.store.ecommerce_store.model.Product;
 import com.ecom.store.ecommerce_store.model.ProductImage;
 import com.ecom.store.ecommerce_store.model.User;
+import com.ecom.store.ecommerce_store.service.InventoryService;
 import com.ecom.store.ecommerce_store.service.ProductService;
 import com.ecom.store.ecommerce_store.service.UserService;
 
@@ -30,10 +31,13 @@ import com.ecom.store.ecommerce_store.service.UserService;
 public class ProductController {
     private ProductService productService;
     private UserService userService;
+    private InventoryService inventoryService;
 
-    public ProductController(ProductService productService, UserService userService) {
+    public ProductController(ProductService productService, UserService userService,
+            InventoryService inventoryService) {
         this.productService = productService;
         this.userService = userService;
+        this.inventoryService = inventoryService;
     }
 
     @PreAuthorize("permitAll()")
@@ -44,7 +48,7 @@ public class ProductController {
             List<ProductResponse> productResponses = products.stream().map(product -> {
                 ProductResponse response = new ProductResponse.Builder(product.getId(), product.getName(),
                         product.getPrice(),
-                        product.getSeller().getEmail(), product.getQuantity())
+                        product.getSeller().getEmail(), inventoryService.getAvailableQuantity(product.getId()))
                         .setDescription(product.getDescription())
                         .setCategory(product.getCategory())
                         .setImages(product.getImages().stream().map(ProductImage::getImageUrl).toList()).build();
@@ -67,7 +71,6 @@ public class ProductController {
         newProduct.setDescription(product.getDescription());
         newProduct.setPrice(product.getPrice());
         newProduct.setCategory(product.getCategory());
-        newProduct.setQuantity(product.getQuantity());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = userService.findByEmail(email);
@@ -87,7 +90,7 @@ public class ProductController {
             newProduct.setImages(images);
         }
         newProduct.setCreatedAt(LocalDateTime.now());
-        productService.createProduct(newProduct);
+        productService.createProduct(newProduct, product.getQuantity());
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -106,7 +109,6 @@ public class ProductController {
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setCategory(product.getCategory());
-        existingProduct.setQuantity(product.getQuantity());
         existingProduct.setUpdatedAt(LocalDateTime.now());
         if (product.getImages() != null) {
             List<ProductImage> images = product.getImages().stream().map(url -> {
@@ -117,9 +119,10 @@ public class ProductController {
             }).toList();
             existingProduct.setImages(images);
         }
-        productService.updateProduct(id, existingProduct);
+        productService.updateProduct(id, existingProduct, product.getQuantity());
         ProductResponse response = new ProductResponse.Builder(existingProduct.getId(), existingProduct.getName(),
-                existingProduct.getPrice(), existingProduct.getSeller().getEmail(), existingProduct.getQuantity())
+                existingProduct.getPrice(), existingProduct.getSeller().getEmail(),
+                inventoryService.getAvailableQuantity(existingProduct.getId()))
                 .setDescription(existingProduct.getDescription())
                 .setCategory(existingProduct.getCategory())
                 .setImages(existingProduct.getImages().stream().map(ProductImage::getImageUrl).toList()).build();
