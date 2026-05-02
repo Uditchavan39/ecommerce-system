@@ -2,6 +2,7 @@ package com.ecom.store.ecommerce_store.service;
 
 import org.springframework.stereotype.Service;
 
+import com.ecom.store.ecommerce_store.exception.InsufficientStockException;
 import com.ecom.store.ecommerce_store.model.Inventory;
 import com.ecom.store.ecommerce_store.repository.InventoryRepository;
 
@@ -24,7 +25,7 @@ public class InventoryService {
         Inventory inventory = inventoryRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product Not Found"));
         if (inventory.getAvailableQuantity() < quantity) {
-            throw new RuntimeException("Out Of Stock");
+            throw new InsufficientStockException(productId, quantity, inventory.getAvailableQuantity());
         }
         inventory.setAvailableQuantity(inventory.getAvailableQuantity() - quantity);
         inventory.setReservedQuantity(inventory.getReservedQuantity() + quantity);

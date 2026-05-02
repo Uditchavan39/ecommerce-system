@@ -1,10 +1,15 @@
 package com.ecom.store.ecommerce_store.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,13 +30,17 @@ public class Order {
 
     private String paymentMethod;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    private BigDecimal totalAmount;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<OrderItem> items;
 
     public List<OrderItem> getItems() {
@@ -66,12 +75,20 @@ public class Order {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public LocalDateTime getCreatedAt() {
