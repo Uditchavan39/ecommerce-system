@@ -2,24 +2,6 @@
 
 A production-ready, transactional e-commerce backend system built with Spring Boot, featuring comprehensive order management, inventory tracking, secure authentication, and payment processing simulation.
 
-## 📋 Table of Contents
-
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Architecture](#architecture)
-- [Database Schema](#database-schema)
-- [API Endpoints](#api-endpoints)
-- [Getting Started](#getting-started)
-- [Configuration](#configuration)
-- [Usage Examples](#usage-examples)
-- [Security](#security)
-- [Error Handling](#error-handling)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-
-## ✨ Features
-
 ### 🔐 Authentication & Authorization
 - JWT-based authentication with role-based access control
 - User registration and login
